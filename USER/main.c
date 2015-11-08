@@ -1,4 +1,4 @@
-/*
+
 #include "stm32f4xx.h"
 #include "usart.h"
 #include "delay.h"
@@ -22,10 +22,11 @@ int main(void)
 		t++;
 	}
 }
-*/
+
 /*
 手册中讲解到步骤15的时候的main.c源码如下：
 */
+/*
 #include "stm32f4xx.h"
 
 //ALIENTEK 探索者STM32F407开发板 实验0
@@ -63,4 +64,4 @@ int main(void)
 	
 	}
 }
-
+*/
