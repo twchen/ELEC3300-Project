@@ -29,25 +29,33 @@ void main_menu(void)
 	}
 }
 
+void snake_game();
 void entertainment_menu(void)
 {
-	int i=1;
-	LCD_Clear(WHITE);
-	LCD_ShowString(150, 40, 200, 24, 24, "ENTERTAINMENT");
-	for(; i<6; ++i){
-		LCD_DrawRectangle(50, i*100, 350, i*100 + 80);
-	}
-	LCD_ShowString(80, 120, 200, 24, 24, "Play Games");
-	LCD_ShowString(80, 220, 200, 24, 24, "Play Music");
-	LCD_ShowString(80, 320, 200, 24, 24, "Display Image");
-	LCD_ShowString(80, 420, 200, 24, 24, "File Explorer");
-	LCD_ShowString(80, 520, 300, 24, 24, "Return to Main Menu");
 	while(1){
-		// todo: trigger certain function when corresponding button is cliked
-		tp_dev.scan(0);
-		if((tp_dev.sta) & 0x80){
-			if(tp_dev.y[4] > 500 && tp_dev.y[4] < 600){
-				main_menu();
+		int i=1;
+		LCD_Clear(WHITE);
+		LCD_ShowString(150, 40, 200, 24, 24, "ENTERTAINMENT");
+		for(; i<6; ++i){
+			LCD_DrawRectangle(50, i*100, 350, i*100 + 80);
+		}
+		LCD_ShowString(80, 120, 200, 24, 24, "Play Games");
+		LCD_ShowString(80, 220, 200, 24, 24, "Play Music");
+		LCD_ShowString(80, 320, 200, 24, 24, "Display Image");
+		LCD_ShowString(80, 420, 200, 24, 24, "File Explorer");
+		LCD_ShowString(80, 520, 300, 24, 24, "Return to Main Menu");
+		while(1){
+			// todo: trigger certain function when corresponding button is cliked
+			tp_dev.scan(0);
+			if((tp_dev.sta) & 0x80){
+				if(tp_dev.y[4] < 100){}
+				else if(tp_dev.y[4] < 200){
+					snake_game();
+					break;
+				}
+				else if(tp_dev.y[4] > 500 && tp_dev.y[4] < 600){
+					main_menu();
+				}
 			}
 		}
 	}
@@ -55,38 +63,51 @@ void entertainment_menu(void)
 
 void home_appliance_menu(void)
 {
-	int i=5;
+	int i=1;
 	short temp;
 	u16 current_y;
+	u16 current_x;
 	int counter = 0;
 	LCD_Clear(WHITE);
 	LCD_ShowString(80, 40, 300, 24, 24, "Manage Home Appliance");
-	while(i){
-		LCD_DrawRectangle(50, i*100, 350, i*100 + 80);
-		i--;
+	for(; i<4; i++){
+		LCD_DrawRectangle(10, i*100, 200, i*100 + 80);
+		LCD_DrawRectangle(200, i*100, 390, i*100 + 80);
 	}
-	LCD_ShowString(80, 120, 200, 24, 24, "Toggle Lamp 0");
-	LCD_ShowString(80, 220, 200, 24, 24, "Toggle Lamp 1");
-	LCD_ShowString(80, 320, 200, 24, 24, "Toggle Alarm");
-	LCD_ShowString(80, 420, 200, 24, 24, "Temperature:00.00");
+	LCD_DrawRectangle(10, 400, 390, 480);
+	LCD_DrawRectangle(10, 500, 390, 580);
+	LCD_ShowString(20, 120, 150, 16, 16, "Turn on Lamp 0");
+	LCD_ShowString(220, 120, 150, 16, 16, "Turn off Lamp 0");
+	LCD_ShowString(20, 220, 150, 16, 16, "Turn on Lamp 1");
+	LCD_ShowString(220, 220, 150, 16, 16, "Turn off Lamp 1");
+	LCD_ShowString(20, 320, 150, 16, 16, "Turn on Alarm");
+	LCD_ShowString(220, 320, 150, 16, 16, "Turn off Alarm");
+	LCD_ShowString(80, 420, 250, 24, 24, "Temperature:00.00C");
 	LCD_ShowString(80, 520, 250, 24, 24, "Return to Main Menu");
 	while(1){
 		tp_dev.scan(0);
 		if((tp_dev.sta) & 0x80){
 			current_y = tp_dev.y[4];
+			current_x = tp_dev.x[4];
 			if(current_y < 100){
 			}
 			else if(current_y < 200){
-				LED0 = !LED0;
-				delay_ms(100);
+				if(current_x < 200)
+					LED0 = 0;
+				else
+					LED0 = 1;
 			}
 			else if(current_y < 300){
-				LED1 = !LED1;
-				delay_ms(100);
+				if(current_x < 200)
+					LED1 = 0;
+				else
+					LED1 = 1;
 			}
 			else if(current_y < 400){
-				BEEP = !BEEP;
-				delay_ms(100);
+				if(current_x < 200)
+					BEEP = 1;
+				else
+					BEEP = 0;
 			}
 			else if(current_y > 500 && current_y < 600)
 				main_menu();
