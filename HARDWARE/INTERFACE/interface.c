@@ -25,11 +25,15 @@ void main_menu(void)
 			else if(tp_dev.x[4] > MENU2_X1 && tp_dev.x[4] < MENU2_X2
 				&& tp_dev.y[4] > MENU2_Y1 && tp_dev.y[4] < MENU2_Y2)
 				entertainment_menu();
+			else{
+				//LCD_SSD_BackLightSet(10);
+				//LCD_LED = 0;
+			}
 		}
 	}
 }
 
-void snake_game();
+void snake_game(void);
 void entertainment_menu(void)
 {
 	while(1){

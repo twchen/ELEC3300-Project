@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <time.h>
 #include "stdbool.h"
 #include "lcd.h"
 #include "key.h"
 #include "delay.h"
 #include "touch.h"
+#include "my_list.h"
 
 #define HEIGHT 16
 #define WIDTH 32
@@ -15,166 +14,21 @@ void _ttywrch(int ch)
 ch = ch;
 }
 
-typedef struct Point
-{
-	int x;
-	int y;
-} Point;
-
-typedef struct Node
-{
-	Point p;
-	struct Node *prev;
-	struct Node *next;
-} Node;
-
-typedef struct List
-{
-	Node *head;
-	int length;
-} List;
-
-Point make_point(int x, int y)
-{
-	Point p;
-	p.x = x;
-	p.y = y;
-	return p;
-}
-
 
 void erasePixel(int x, int y)
 {
-	LCD_Fill(x * 20 + 20, y * 20 + 20, x*20 + 40, y*20 + 40, WHITE);
+	LCD_Fill(x * 20 + 20, y * 20 + 20, x*20 + 39, y*20 + 39, WHITE);
 }
 
 void fillPixel(int x, int y)
 {
-	LCD_Fill(x * 20+20, y * 20+20, x*20 + 40, y*20+40, BLACK);
+	LCD_Fill(x * 20+20, y * 20+20, x*20 + 39, y*20+39, BLACK);
 }
 
 void drawFood(int x, int y)
 {
-	LCD_Fill(x * 20+20, y * 20+20, x*20 + 40, y*20+40, RED);
+	LCD_Fill(x * 20+20, y * 20+20, x*20 + 39, y*20+39, RED);
 }
-
-//void print_point(Point p)
-//{
-//	printf("(%d, %d), ", p.x, p.y);
-//}
-
-void print_list(List *list)
-{
-	Node *curr = list->head->next;
-	while(curr != list->head){
-		//print_point(curr->p);
-		curr = curr->next;
-	}
-	//printf("\n");
-}
-
-List *make_list()
-{
-	List *list = (List*)malloc(sizeof(List));
-	Node *dummy_head = (Node*)malloc(sizeof(Node));
-	dummy_head->p = make_point(0,0);
-	dummy_head->prev = dummy_head->next = dummy_head;
-	list->head = dummy_head;
-	list->length = 0;
-	return list;
-}
-
-void push_front(List *list, Point p)
-{
-	Node *new_node = (Node*)malloc(sizeof(Node));
-	new_node->p = p;
-	new_node->prev = list->head;
-	new_node->next = list->head->next;
-	list->head->next = new_node;
-	new_node->next->prev = new_node;
-	++(list->length);
-}
-
-void push_back(List *list, Point p)
-{
-	Node *new_node = (Node*)malloc(sizeof(Node));
-	new_node->p = p;
-	new_node->prev = list->head->prev;
-	new_node->next = list->head;
-	list->head->prev = new_node;
-	new_node->prev->next = new_node;
-	++(list->length);
-}
-
-// get the pointer points to the first node
-Node *get_head(List *list)
-{
-	return list->head->next;
-}
-
-// get the pointer points to the last node
-Node *get_tail(List *list)
-{
-	return list->head->prev;
-}
-
-void pop_front(List *list)
-{
-	Node *temp = list->head->next;
-	if(list->head == list->head->next)
-		return;
-	list->head->next = temp->next;
-	temp->next->prev = temp->prev;
-	--(list->length);
-	free(temp);
-}
-
-void pop_back(List *list)
-{
-	Node *temp = list->head->prev;
-	if(list->head == list->head->next)
-		return;
-	list->head->prev = temp->prev;
-	temp->prev->next = temp->next;
-	--(list->length);
-	free(temp);
-}
-
-Point list_front(List *list)
-{
-	return list->head->next->p;
-}
-
-Point list_back(List *list)
-{
-	return list->head->prev->p;
-}
-
-void clear_list(List *list)
-{
-	Node *tail = list->head->prev;
-	Node *curr = list->head->next;
-	while(curr != list->head){
-		free(curr->prev);
-		curr = curr->next;
-	}
-	free(tail);
-	free(list);
-}
-
-List *copy_list(List *list)
-{
-	List *new_list = make_list();
-	Node *curr = list->head->next;
-	while(curr != list->head){
-		push_back(new_list, curr->p);
-		curr = curr->next;
-	}
-	return new_list;
-}
-
-
-
 
 typedef enum Direction
 {
@@ -298,7 +152,7 @@ void print_game_over()
 #define KEY_RIGHT 2
 #define KEY_LEFT 4
 
-void snake_game()
+void snake_game(void)
 {
 	//srand ( time(NULL) );
 	srand(0);
@@ -327,11 +181,15 @@ void snake_game()
 			dir = LEFT;
 		
 		tp_dev.scan(0);
-		if((tp_dev.sta) & 0x80 && tp_dev.y[4] > 600)
+		if((tp_dev.sta) & 0x80 && tp_dev.y[4] > 600){
+			clear_list(snake);
 			break;
+		}
+			
 		move_forward();
 		if(game_over){
 			print_game_over();
+			clear_list(snake);
 			delay_ms(1000);
 			break;
 		}
