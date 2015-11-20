@@ -71,7 +71,7 @@ void home_appliance_menu(void)
 	short temp;
 	u16 current_y;
 	u16 current_x;
-	int counter = 0;
+	//int counter = 0;
 	LCD_Clear(WHITE);
 	LCD_ShowString(80, 40, 300, 24, 24, "Manage Home Appliance");
 	for(; i<4; i++){

@@ -41,7 +41,7 @@ typedef enum Direction
 bool space[NUM_OF_PIXELS]; // 16 * 32
 
 List *snake;
-Direction dir;
+Direction snake_dir;
 
 Point food;
 bool game_over;
@@ -75,7 +75,7 @@ void move_forward()
 {
 	Point p = list_front(snake);
 	int x = p.x, y = p.y;
-	switch(dir){
+	switch(snake_dir){
 		case UP:
 			--x;
 			break;
@@ -159,7 +159,7 @@ void snake_game(void)
 	init_space();
 
 	snake = make_snake();
-	dir = RIGHT;
+	snake_dir= RIGHT;
 	make_food();
 	game_over = false;
 
@@ -171,14 +171,14 @@ void snake_game(void)
 			counter--;
 		}
 		counter = 500000;
-		if(ch == KEY_UP && dir != DOWN)
-			dir = UP;
-		else if(ch == KEY_RIGHT && dir != LEFT)
-			dir = RIGHT;
-		else if(ch == KEY_DOWN && dir != UP)
-			dir = DOWN;
-		else if(ch == KEY_LEFT && dir != RIGHT)
-			dir = LEFT;
+		if(ch == KEY_UP && snake_dir!= DOWN)
+			snake_dir= UP;
+		else if(ch == KEY_RIGHT && snake_dir!= LEFT)
+			snake_dir= RIGHT;
+		else if(ch == KEY_DOWN && snake_dir!= UP)
+			snake_dir= DOWN;
+		else if(ch == KEY_LEFT && snake_dir!= RIGHT)
+			snake_dir= LEFT;
 		
 		tp_dev.scan(0);
 		if((tp_dev.sta) & 0x80 && tp_dev.y[4] > 600){
