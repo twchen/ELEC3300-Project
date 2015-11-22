@@ -241,8 +241,8 @@ void DMA1_Stream4_IRQHandler(void)
 	{ 
 		DMA_ClearITPendingBit(DMA1_Stream4,DMA_IT_TCIF4);
       	i2s_tx_callback();	//执行回调函数,读取数据等操作在这里面处理  
-	}   											 
-} 
+	}
+}
 //DMA1_Stream3中断服务函数
 void DMA1_Stream3_IRQHandler(void)
 {      
@@ -250,7 +250,7 @@ void DMA1_Stream3_IRQHandler(void)
 	{ 
 		DMA_ClearITPendingBit(DMA1_Stream3,DMA_IT_TCIF3);	//清除传输完成中断
       	i2s_rx_callback();	//执行回调函数,读取数据等操作在这里面处理  
-	}  											 
+	}
 } 
 //I2S开始播放
 void I2S_Play_Start(void)

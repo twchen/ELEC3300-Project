@@ -128,9 +128,9 @@ u32 wav_buffill(u8 *buf,u16 size,u8 bits)
 }  
 //WAV播放时,I2S DMA传输回调函数
 void wav_i2s_dma_tx_callback(void) 
-{   
+{
 	u16 i;
-	if(DMA1_Stream4->CR&(1<<19))
+	if(DMA1_Stream4->CR&(1<<19)) // currently using buffer 1 , buffer 0 finished transfer, will fill buffer 0
 	{
 		wavwitchbuf=0;
 		if((audiodev.status&0X01)==0)
@@ -140,7 +140,7 @@ void wav_i2s_dma_tx_callback(void)
 				audiodev.i2sbuf1[i]=0;//填充0
 			}
 		}
-	}else 
+	}else // currently using buffer 0 , buffer 1 finished transfer, will fill buffer 1
 	{
 		wavwitchbuf=1;
 		if((audiodev.status&0X01)==0)
@@ -212,12 +212,12 @@ u8 wav_play_song(u8* fname)
 					{
 						res=KEY0_PRES;
 						break;
-					} 
+					}
  					if(wavwitchbuf)fillnum=wav_buffill(audiodev.i2sbuf2,WAV_I2S_TX_DMA_BUFSIZE,wavctrl.bps);//填充buf2
 					else fillnum=wav_buffill(audiodev.i2sbuf1,WAV_I2S_TX_DMA_BUFSIZE,wavctrl.bps);//填充buf1
 					while(1)
 					{
-						key=KEY_Scan(0); 
+						key=KEY_Scan(0);
 						if(key==WKUP_PRES)//暂停
 						{
 							if(audiodev.status&0X01)audiodev.status&=~(1<<0);
@@ -243,7 +243,7 @@ u8 wav_play_song(u8* fname)
 				audio_stop(); 
 			}else res=0XFF; 
 		}else res=0XFF;
-	}else res=0XFF; 
+	}else res=0XFF;
 	myfree(SRAMIN,audiodev.tbuf);	//释放内存
 	myfree(SRAMIN,audiodev.i2sbuf1);//释放内存
 	myfree(SRAMIN,audiodev.i2sbuf2);//释放内存 
