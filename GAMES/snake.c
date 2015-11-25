@@ -4,8 +4,9 @@
 #include "delay.h"
 #include "touch.h"
 #include "my_list.h"
+#include "piclib.h"
 
-#define HEIGHT 16
+#define HEIGHT 22
 #define WIDTH 32
 #define NUM_OF_PIXELS (HEIGHT * WIDTH)
 
@@ -14,6 +15,7 @@ void _ttywrch(int ch)
 ch = ch;
 }
 
+int snake_score = 0;
 
 void erasePixel(int x, int y)
 {
@@ -111,6 +113,8 @@ void move_forward()
 		push_front(snake, food);
 		fillPixel(x, y);
 		space[x * WIDTH + y] = true;
+		snake_score++;
+		LCD_ShowNum(84, 720, snake_score, 2, 24);
 		make_food();
 	}
 	else{ // collide with itself
@@ -129,22 +133,27 @@ void init_space()
 {
 	int i=0;
 	LCD_Clear(WHITE);
+	ai_load_picfile("0:/systems/snake.jpg", 0, 0, 480, 800, 1);
+	delay_ms(1000);
+	LCD_Clear(WHITE);
 	LCD_Fill(0, 0, 20, 680, GREEN);
-	LCD_Fill(340, 0, 360, 680, GREEN);
-	LCD_Fill(20, 0, 340, 20, GREEN);
-	LCD_Fill(20, 660, 340, 680, GREEN);
+	LCD_Fill(460, 0, 479, 680, GREEN);
+	LCD_Fill(20, 0, 460, 20, GREEN);
+	LCD_Fill(20, 660, 460, 680, GREEN);
 	for(; i<NUM_OF_PIXELS; ++i)
 		space[i] = false;
 	/* init snake position */
 	i=0;
 	for(; i<5; ++i)
 		space[10*WIDTH + 5 + i] = true;
+	LCD_ShowString(20, 720, 150, 24, 24, "Score 0");
+	LCD_ShowString(100, 750, 400, 24, 24, "Hold on to return");
 }
 
 void print_game_over()
 {
 	LCD_Clear(WHITE);
-	LCD_ShowString(30, 200, 200, 24, 24, "GAME OVER!");
+	ai_load_picfile("0:/systems/gameover.jpg", 0, 0, 480, 800, 1);
 }
 
 #define KEY_UP 3

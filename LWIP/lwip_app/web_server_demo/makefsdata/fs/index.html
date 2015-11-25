@@ -1,0 +1,63 @@
+<html ng-app="myapp" ng-controller="MyController"> 
+<head> 
+	<style>
+		li {
+			display:block;
+			margin: 10px 0;
+			padding: 10px;
+		}
+		.inline {
+			display: inline;
+		}
+		.table th, .table td{
+			text-align: center;
+		}
+	</style>
+</head> 
+<body>
+	<div class="container">
+		<h2>Welcome to Smart Home System!</h2>         
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Device</th>
+					<th>Current Status (Click to Refresh)</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Temperature</td>
+					<td ng-click="refresh('temp')">{{temp}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="getTem()">Refresh</button></td>
+				</tr>
+				<tr>
+					<td>Lamp 1</td>
+					<td ng-click="refresh('lamp1')">{{lamp1}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="switch('lamp1')">Toggle Lamp 1</button></td>
+				</tr>
+				<tr>
+					<td>Lamp 2</td>
+					<td ng-click="refresh('lamp2')">{{lamp2}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="switch('lamp2')">Toggle Lamp 2</button></td>
+				</tr>
+				<tr>
+					<td>Alarm</td>
+					<td  ng-click="refresh('alarm')">{{alarm}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="switch('alarm')">Trigger Alarm</button></td>
+				</tr>
+				<tr>
+					<td>Music Player</td>
+					<td>{{music}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="play_music()">Play/Stop</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body> 
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+<script src="http://www.awsvps.tk/angular.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</html>

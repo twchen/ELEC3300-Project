@@ -12,48 +12,32 @@
 #include "key.h"
 #include "exfuns.h"  
 #include "text.h"
-#include "string.h"  
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//录音机 应用代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/6/6
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 	
-  
+#include "string.h"
+
 u8 *i2srecbuf1;
 u8 *i2srecbuf2; 
 
-FIL* f_rec=0;		//录音文件	
-u32 wavsize;		//wav数据大小(字节数,不包括文件头!!)
-u8 rec_sta=0;		//录音状态
-					//[7]:0,没有开启录音;1,已经开启录音;
-					//[6:1]:保留
-					//[0]:0,正在录音;1,暂停录音;
-					
-//录音 I2S_DMA接收中断服务函数.在中断里面写入数据
+FIL* f_rec=0;
+u32 wavsize;
+u8 rec_sta=0; // [7]:0, off, 1, on; [0]:0,recoding, paused
+
 void rec_i2s_dma_rx_callback(void) 
 {    
 	u16 bw;
 	u8 res;
-	if(rec_sta==0X80)//录音模式
+	if(rec_sta==0X80) // recoding
 	{  
 		if(DMA1_Stream3->CR&(1<<19))
 		{
-			res=f_write(f_rec,i2srecbuf1,I2S_RX_DMA_BUF_SIZE,(UINT*)&bw);//写入文件
+			res=f_write(f_rec,i2srecbuf1,I2S_RX_DMA_BUF_SIZE,(UINT*)&bw);
 			if(res)
 			{
 				printf("write error:%d\r\n",res);
 			}
-			 
+			
 		}else 
 		{
-			res=f_write(f_rec,i2srecbuf2,I2S_RX_DMA_BUF_SIZE,(UINT*)&bw);//写入文件
+			res=f_write(f_rec,i2srecbuf2,I2S_RX_DMA_BUF_SIZE,(UINT*)&bw);
 			if(res)
 			{
 				printf("write error:%d\r\n",res);
@@ -62,8 +46,8 @@ void rec_i2s_dma_rx_callback(void)
 		wavsize+=I2S_RX_DMA_BUF_SIZE;
 	} 
 }  
-const u16 i2splaybuf[2]={0X0000,0X0000};//2个16位数据,用于录音时I2S Master发送.循环发送0.
-//进入PCM 录音模式 		  
+const u16 i2splaybuf[2]={0X0000,0X0000};
+
 void recoder_enter_rec_mode(void)
 {
 	WM8978_ADDA_Cfg(0,1);		//开启ADC
@@ -110,13 +94,13 @@ void recoder_wav_init(__WaveHeader* wavhead) //初始化WAV头
  	wavhead->fmt.BitsPerSample=16;		//16位PCM
    	wavhead->data.ChunkID=0X61746164;	//"data"
  	wavhead->data.ChunkSize=0;			//数据大小,还需要计算  
-} 						    
+ } 						    
 //显示录音时间和码率
 //tsec:秒钟数.
-void recoder_msg_show(u32 tsec,u32 kbps)
-{   
+ void recoder_msg_show(u32 tsec,u32 kbps)
+ {   
 	//显示录音时间			 
-	LCD_ShowString(30,210,200,16,16,"TIME:");	  	  
+ 	LCD_ShowString(30,210,200,16,16,"TIME:");	  	  
 	LCD_ShowxNum(30+40,210,tsec/60,2,16,0X80);	//分钟
 	LCD_ShowChar(30+56,210,':',16,0);
 	LCD_ShowxNum(30+64,210,tsec%60,2,16,0X80);	//秒钟	
@@ -168,9 +152,9 @@ void wav_recorder(void)
 	u8 timecnt=0;					//计时器   
 	u32 recsec=0;					//录音时间 
   	while(f_opendir(&recdir,"0:/RECORDER"))//打开录音文件夹
- 	{	 
-		Show_Str(30,230,240,16,"RECORDER文件夹错误!",16,0);
-		delay_ms(200);				  
+  	{	 
+  		Show_Str(30,230,240,16,"RECORDER文件夹错误!",16,0);
+  		delay_ms(200);				  
 		LCD_Fill(30,230,240,246,WHITE);		//清除显示	     
 		delay_ms(200);				  
 		f_mkdir("0:/RECORDER");				//创建该目录   
@@ -184,7 +168,7 @@ void wav_recorder(void)
 	{
 		recoder_enter_rec_mode();	//进入录音模式,此时耳机可以听到咪头采集到的音频   
 		pname[0]=0;					//pname没有任何文件名 
- 	   	while(rval==0)
+		while(rval==0)
 		{
 			key=KEY_Scan(0);
 			switch(key)
@@ -197,11 +181,11 @@ void wav_recorder(void)
 				   		wavhead->data.ChunkSize=wavsize;		//数据大小
 						f_lseek(f_rec,0);						//偏移到文件头.
 				  		f_write(f_rec,(const void*)wavhead,sizeof(__WaveHeader),&bw);//写入头数据
-						f_close(f_rec);
-						wavsize=0;
-					}
-					rec_sta=0;
-					recsec=0;
+				  		f_close(f_rec);
+				  		wavsize=0;
+				  	}
+				  	rec_sta=0;
+				  	recsec=0;
 				 	LED1=1;	 						//关闭DS1
 					LCD_Fill(30,190,lcddev.width,lcddev.height,WHITE);//清除显示,清除之前显示的录音文件名		      
 					break;	 
@@ -219,7 +203,7 @@ void wav_recorder(void)
 						Show_Str(30,190,lcddev.width,16,"录制:",16,0);		   
 						Show_Str(30+40,190,lcddev.width,16,pname+11,16,0);//显示当前录音文件名字
 				 		recoder_wav_init(wavhead);				//初始化wav数据	
-	 					res=f_open(f_rec,(const TCHAR*)pname, FA_CREATE_ALWAYS | FA_WRITE); 
+				 		res=f_open(f_rec,(const TCHAR*)pname, FA_CREATE_ALWAYS | FA_WRITE); 
 						if(res)			//文件创建失败
 						{
 							rec_sta=0;	//创建文件失败,不能录音
@@ -229,7 +213,7 @@ void wav_recorder(void)
 							res=f_write(f_rec,(const void*)wavhead,sizeof(__WaveHeader),&bw);//写入头数据
 							recoder_msg_show(0,0);
  							rec_sta|=0X80;	//开始录音	 
-						} 
+ 						} 
  					}
 					if(rec_sta&0X01)LED1=0;	//提示正在暂停
 					else LED1=1;
@@ -248,12 +232,12 @@ void wav_recorder(void)
 						}
 					}
 					break;
-			} 
-			delay_ms(5);
-			timecnt++;
+				} 
+				delay_ms(5);
+				timecnt++;
 			if((timecnt%20)==0)LED0=!LED0;//DS0闪烁  
  			if(recsec!=(wavsize/wavhead->fmt.ByteRate))	//录音时间显示
-			{	   
+ 			{	   
 				LED0=!LED0;//DS0闪烁 
 				recsec=wavsize/wavhead->fmt.ByteRate;	//录音时间
 				recoder_msg_show(recsec,wavhead->fmt.SampleRate*wavhead->fmt.NumOfChannels*wavhead->fmt.BitsPerSample);//显示码率

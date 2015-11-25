@@ -359,13 +359,13 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\FWLIB\inc;..\CORE;..\USER;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LCD;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\IIC;..\HARDWARE\24CXX;..\HARDWARE\TOUCH;..\HARDWARE\BEEP;..\HARDWARE\ADC;..\GAMES;..\HARDWARE\SDIO;..\MALLOC;..\HARDWARE\SRAM;..\HARDWARE\SPI;..\HARDWARE\FLASH;..\FATFS\src;..\FATFS\exfuns;..\USMART;..\HARDWARE\GUIDRAW;..\MYLIB\INTERFACE;..\TEXT;..\PICTURE;..\HARDWARE\AUDIOCODEC\wav;..\HARDWARE\I2S;..\HARDWARE\WM8978;..\APP;..\HARDWARE\ETHERNET;..\LWIP\lwip-1.4.1\src\include;..\LWIP\lwip-1.4.1\src\include\ipv4;..\LWIP\lwip-1.4.1\src\include\netif;..\LWIP\lwip_app\lwip_comm;..\LWIP\lwip_timer;..\LWIP</IncludePath>
+              <IncludePath>..\FWLIB\inc;..\CORE;..\USER;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LCD;..\HARDWARE\LED;..\HARDWARE\KEY;..\HARDWARE\IIC;..\HARDWARE\24CXX;..\HARDWARE\TOUCH;..\HARDWARE\BEEP;..\HARDWARE\ADC;..\GAMES;..\HARDWARE\SDIO;..\MALLOC;..\HARDWARE\SRAM;..\HARDWARE\SPI;..\HARDWARE\FLASH;..\FATFS\src;..\FATFS\exfuns;..\USMART;..\HARDWARE\GUIDRAW;..\MYLIB\INTERFACE;..\TEXT;..\PICTURE;..\HARDWARE\AUDIOCODEC\wav;..\HARDWARE\I2S;..\HARDWARE\WM8978;..\APP;..\HARDWARE\ETHERNET;..\LWIP\lwip-1.4.1\src\include;..\LWIP\lwip-1.4.1\src\include\ipv4;..\LWIP\lwip-1.4.1\src\include\netif;..\LWIP\lwip_app\lwip_comm;..\LWIP\lwip_timer;..\LWIP;..\LWIP\lwip_app\web_server_demo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -659,11 +659,6 @@
               <FilePath>..\HARDWARE\24CXX\24cxx.c</FilePath>
             </File>
             <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\KEY\key.c</FilePath>
-            </File>
-            <File>
               <FileName>myiic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\IIC\myiic.c</FilePath>
@@ -692,11 +687,6 @@
               <FileName>touch.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\TOUCH\touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>beep.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\BEEP\beep.c</FilePath>
             </File>
             <File>
               <FileName>adc.c</FileName>
@@ -729,14 +719,19 @@
               <FilePath>..\HARDWARE\GUIDRAW\gui_draw.c</FilePath>
             </File>
             <File>
-              <FileName>wavplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\AUDIOCODEC\wav\wavplay.c</FilePath>
-            </File>
-            <File>
               <FileName>wm8978.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\WM8978\wm8978.c</FilePath>
+            </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\KEY\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\BEEP\beep.c</FilePath>
             </File>
             <File>
               <FileName>i2s.c</FileName>
@@ -829,9 +824,19 @@
           <GroupName>MYLIB</GroupName>
           <Files>
             <File>
+              <FileName>wavplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\AUDIOCODEC\wav\wavplay.c</FilePath>
+            </File>
+            <File>
               <FileName>interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\MYLIB\INTERFACE\interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MYLIB\device.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -887,6 +892,11 @@
               <FileName>recorder.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\recorder.c</FilePath>
+            </File>
+            <File>
+              <FileName>picturedisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\picturedisplay.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1077,6 +1087,26 @@
               <FileName>lwip_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LWIP\lwip_timer\lwip_timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>LWIPAPP</GroupName>
+          <Files>
+            <File>
+              <FileName>fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LWIP\lwip_app\web_server_demo\fs.c</FilePath>
+            </File>
+            <File>
+              <FileName>httpd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LWIP\lwip_app\web_server_demo\httpd.c</FilePath>
+            </File>
+            <File>
+              <FileName>httpd_cgi_ssi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LWIP\lwip_app\web_server_demo\httpd_cgi_ssi.c</FilePath>
             </File>
           </Files>
         </Group>

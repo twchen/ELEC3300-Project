@@ -64,7 +64,7 @@ int main(void)
 	my_mem_init(SRAMEX);		//初始化外部内存池
 	my_mem_init(SRAMCCM);	//初始化CCM内存池
 	
-	POINT_COLOR = RED; 		
+	POINT_COLOR = RED;
 	LCD_ShowString(30,30,200,16,16,"Explorer STM32F4");
 	LCD_ShowString(30,50,200,16,16,"Ethernet lwIP Test");
 	LCD_ShowString(30,70,200,16,16,"ATOM@ALIENTEK");

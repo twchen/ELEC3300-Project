@@ -1,6 +1,7 @@
 #include "lwip_timer.h"
 #include "led.h"
 #include "lwip_comm.h"
+#include "httpd.h"
 
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
@@ -32,7 +33,7 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	TIM_TimeBaseInitStructure.TIM_Prescaler=psc;  //定时器分频
 	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
 	TIM_TimeBaseInitStructure.TIM_Period=arr;   //自动重装载值
-	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
+	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; // 0
 	
 	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 	
@@ -55,4 +56,5 @@ void TIM3_IRQHandler(void)
 		lwip_localtime +=10; //加10
 	}
 	TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位
+	//lwip_periodic_handle();
 }

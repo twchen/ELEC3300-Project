@@ -1,20 +1,6 @@
 #include "piclib.h"
 #include "lcd.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//图片解码 驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/15
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved
-//********************************************************************************
-//升级说明
-//无
-//////////////////////////////////////////////////////////////////////////////////
+#include "usart.h"
 
 _pic_info picinfo;	 	//图片信息
 _pic_phy pic_phy;		//图片显示物理接口	
@@ -115,22 +101,27 @@ u8 is_element_ok(u16 x,u16 y,u8 chg)
 //fast:使能jpeg/jpg小图片(图片尺寸小于等于液晶分辨率)快速解码,0,不使能;1,使能.
 //图片在开始和结束的坐标点范围内显示
 u8 ai_load_picfile(const u8 *filename,u16 x,u16 y,u16 width,u16 height,u8 fast)
-{	
+{
+	u8 numOfLines = 0;
 	u8	res;//返回值
-	u8 temp;	
+	u8 temp;
 	if((x+width)>picinfo.lcdwidth)return PIC_WINDOW_ERR;		//x坐标超范围了.
+	printf("line %d", ++numOfLines);
 	if((y+height)>picinfo.lcdheight)return PIC_WINDOW_ERR;		//y坐标超范围了.  
 	//得到显示方框大小	  	 
+	printf("line %d", ++numOfLines);
 	if(width==0||height==0)return PIC_WINDOW_ERR;	//窗口设定错误
 	picinfo.S_Height=height;
 	picinfo.S_Width=width;
 	//显示区域无效
+	printf("line %d", ++numOfLines);
 	if(picinfo.S_Height==0||picinfo.S_Width==0)
 	{
 		picinfo.S_Height=lcddev.height;
 		picinfo.S_Width=lcddev.width;
 		return FALSE;   
 	}
+	printf("line %d", ++numOfLines);
 	if(pic_phy.fillcolor==NULL)fast=0;//颜色填充函数未实现,不能快速显示
 	//显示的开始坐标点
 	picinfo.S_YOFF=y;
@@ -144,7 +135,9 @@ u8 ai_load_picfile(const u8 *filename,u16 x,u16 y,u16 width,u16 height,u8 fast)
 			break;
 		case T_JPG:
 		case T_JPEG:
-			res=jpg_decode(filename,fast);				//解码JPG/JPEG	  	  
+			printf("line %d", ++numOfLines);
+			res=jpg_decode(filename,fast);				//解码JPG/JPEG	 
+			printf("line %d", ++numOfLines);
 			break;
 		case T_GIF:
 			res=gif_decode(filename,x,y,width,height);	//解码gif  	  

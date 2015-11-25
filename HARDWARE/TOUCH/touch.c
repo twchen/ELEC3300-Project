@@ -192,24 +192,27 @@ u8 TP_Scan(u8 tp)
 {			   
 	if(PEN==0)//有按键按下
 	{
-		if(tp)TP_Read_XY2(&tp_dev.x[0],&tp_dev.y[0]);//读取物理坐标
+		if(tp)
+			TP_Read_XY2(&tp_dev.x[0],&tp_dev.y[0]);//读取物理坐标
 		else if(TP_Read_XY2(&tp_dev.x[0],&tp_dev.y[0]))//读取屏幕坐标
 		{
 	 		tp_dev.x[0]=tp_dev.xfac*tp_dev.x[0]+tp_dev.xoff;//将结果转换为屏幕坐标
 			tp_dev.y[0]=tp_dev.yfac*tp_dev.y[0]+tp_dev.yoff;  
-	 	} 
+	 	}
 		if((tp_dev.sta&TP_PRES_DOWN)==0)//之前没有被按下
-		{		 
+		{
 			tp_dev.sta=TP_PRES_DOWN|TP_CATH_PRES;//按键按下  
 			tp_dev.x[4]=tp_dev.x[0];//记录第一次按下时的坐标
 			tp_dev.y[4]=tp_dev.y[0];  	   			 
 		}			   
-	}else
+	}
+	else // no pen is pressed
 	{
 		if(tp_dev.sta&TP_PRES_DOWN)//之前是被按下的
 		{
 			tp_dev.sta&=~(1<<7);//标记按键松开	
-		}else//之前就没有被按下
+		}
+		else//之前就没有被按下
 		{
 			tp_dev.x[4]=0;
 			tp_dev.y[4]=0;
