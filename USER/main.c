@@ -56,7 +56,7 @@ void show_address(u8 mode)
 }
 
 int main(void)
-{ 
+{
 	int counter = 0;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
@@ -72,8 +72,8 @@ int main(void)
 	my_mem_init(SRAMIN); // init internal memory, 128 KB
 	my_mem_init(SRAMEX); // init external memory, 1024 KB
 	my_mem_init(SRAMCCM); // init CCM memory, 64 KB, can only be used by CPU
-	exfuns_init();				//为fatfs相关变量申请内存  
-  f_mount(fs[0],"0:",1); 		//挂载SD卡  
+	exfuns_init();				
+  f_mount(fs[0],"0:",1);
 	Adc_Init();
 	tp_dev.init(); // initialize touchpad
 	TIM3_Int_Init(999, 839); // lwip timer init
@@ -93,15 +93,15 @@ int main(void)
 #endif
 	show_address(lwipdev.dhcpstatus);
 	delay_ms(5000);
-	//httpd_init();
+	httpd_init();
 	POINT_COLOR = BLACK;
 	draw_main_menu();
 	set_handler(main_menu_handler);
-	while(font_init()) 			//检查字库
+	while(font_init())
 	{	    
 		LCD_ShowString(30,50,200,16,16,"Font Error!");
 		delay_ms(200);				  
-		LCD_Fill(30,50,240,66,WHITE);//清除显示	     
+		LCD_Fill(30,50,240,66,WHITE);
 		delay_ms(200);				  
 	}
 	u16 prev_sta = 0x0;
@@ -112,12 +112,12 @@ int main(void)
 		}
 		prev_sta = tp_dev.sta;
 		tp_dev.sta &= 0x7f;
-		/*
-		if(counter++ >= 100){
-			LED0 = !LED0;
-			counter = 0;
+		if(music_on){
+			if(!is_web_music_player){
+				is_web_music_player = 1;
+			}
+			music_handler();
 		}
-		*/
 		lwip_periodic_handle();
 	}
 }

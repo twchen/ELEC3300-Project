@@ -15,8 +15,6 @@
 #define NUM_CONFIG_CGI_URIS	1
 #define NUM_CONFIG_SSI_TAGS	5
 
-u8 music_on = 0;
-extern void set_handler(void (*handler)(u16, u16));
 extern short Get_Temperature(void);
 
 const char* Switch_CGI_Handler(int iIndex,int iNumParams,char *pcParam[],char *pcValue[]);
@@ -25,9 +23,9 @@ static const char *ppcTAGs[]= // tag of ssi
 {
 	"t", // temperature
 	"h", // humidity,
-	"lamp1",
-	"lamp2",
-	"alarm"
+	"l",
+	"L",
+	"a"
 };
 
 static const tCGI ppcURLs[]= // cgi programs
@@ -59,11 +57,11 @@ void Temperate_Handler(char *pcInsert)
     Digit3 = (Temperate % 1000)/100 ;
     Digit4 = (Temperate % 100)/10;
 
-	*pcInsert 		= (char)(Digit1+0x30);
-	*(pcInsert+1) = (char)(Digit2+0x30);
-	*(pcInsert+2)	=	(char)(Digit3+0x30);
-	*(pcInsert+3) = '.';
-	*(pcInsert+4) = (char)(Digit4+0x30);
+	*pcInsert 		= (char)(Digit2+0x30);
+	*(pcInsert+1) = (char)(Digit3+0x30);
+	*(pcInsert+2)	=	'.';
+	*(pcInsert+3) = (char)(Digit4+0x30);
+	*(pcInsert+4) = 0;
 }
 
 void Device_Handler(char *pcInsert, u8 status)
@@ -71,16 +69,19 @@ void Device_Handler(char *pcInsert, u8 status)
 	if(status){
 		*pcInsert 		= 'O';
 		*(pcInsert+1) = 'n';
+		*(pcInsert+2) = 0;
 	}
 	else{
 		*pcInsert 		= 'O';
 		*(pcInsert+1) = 'f';
 		*(pcInsert+2)	=	'f';
+		*(pcInsert+3) = 0;
 	}
 }
 
 static u16_t SSIHandler(int iIndex,char *pcInsert,int iInsertLen)
 {
+	u8 status;
 	switch(iIndex)
 	{
 		case 0:
@@ -90,10 +91,11 @@ static u16_t SSIHandler(int iIndex,char *pcInsert,int iInsertLen)
 			//Humidity_Handler(pcInsert);
 			break;
 		case 2:
-			Device_Handler(pcInsert, LAMP1);
+			status = !LED0;
+			Device_Handler(pcInsert, status);
 			break;
 		case 3:
-			Device_Handler(pcInsert, LAMP2);
+			Device_Handler(pcInsert, !LED1);
 			break;
 		case 4:
 			Device_Handler(pcInsert, BEEP);
@@ -121,10 +123,11 @@ const char* Switch_CGI_Handler(int iIndex, int iNumParams, char *pcParam[], char
 				else if(strcmp(pcValue[i], "music") == 0){
 					if(music_on){
 						music_on = 0;
+						printf("music off\n");
 					}
 					else{
 						music_on = 1;
-						set_handler(music_handler);
+						printf("music on\n");
 					}
 				}
 			}

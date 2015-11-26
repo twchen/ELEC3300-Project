@@ -12,6 +12,7 @@
 #include "text.h"
 #include "string.h"
 #include "lwip_comm.h"
+#include "interface.h"
 
 __audiodev audiodev;	  
 
@@ -72,17 +73,17 @@ void audio_msg_show(u32 totsec,u32 cursec,u32 bitrate)
 	{
 		playtime=cursec;
 		
-		LCD_ShowxNum(60,550,playtime/60,2,16,0X80);		
-		LCD_ShowChar(60+16,550,':',16,0);
-		LCD_ShowxNum(60+24,550,playtime%60,2,16,0X80);	
-		LCD_ShowChar(60+40,550,'/',16,0); 	    	 
+		LCD_ShowxNum(150,550,playtime/60,2,16,0X80);		
+		LCD_ShowChar(150+16,550,':',16,0);
+		LCD_ShowxNum(150+24,550,playtime%60,2,16,0X80);	
+		LCD_ShowChar(150+40,550,'/',16,0); 	    	 
 		
-		LCD_ShowxNum(60+48,550,totsec/60,2,16,0X80);	
-		LCD_ShowChar(60+64,550,':',16,0);
-		LCD_ShowxNum(60+72,550,totsec%60,2,16,0X80);	
+		LCD_ShowxNum(150+48,550,totsec/60,2,16,0X80);	
+		LCD_ShowChar(150+64,550,':',16,0);
+		LCD_ShowxNum(150+72,550,totsec%60,2,16,0X80);	
 		
-		LCD_ShowxNum(60+110,550,bitrate/1000,4,16,0X80);
-		LCD_ShowString(60+110+32,550,200,16,16,"Kbps");	 
+		LCD_ShowxNum(150+110,550,bitrate/1000,4,16,0X80);
+		LCD_ShowString(150+110+32,550,200,16,16,"Kbps");	 
 	} 		 
 }
 
@@ -162,9 +163,9 @@ int audio_play(void)
 		if(res!=FR_OK||wavfileinfo.fname[0]==0)break;	
 		fn=(u8*)(*wavfileinfo.lfname?wavfileinfo.lfname:wavfileinfo.fname);			 
 		strcpy((char*)pname,"0:/music/");				
-		strcat((char*)pname,(const char*)fn);  			
-		LCD_Fill(100,130,240,200,WHITE);				
-		Show_Str(100,130,240,16,fn,16,0);				
+		strcat((char*)pname,(const char*)fn);	
+		LCD_Fill(100,130,240,150,WHITE);				
+		Show_Str(100,130,360,16,fn,16,0);	// show name		
 		//audio_index_show(curindex+1,totwavnum);
 		key=audio_play_song(pname); 			 		
 		if(key==KEY2_PRES)		
@@ -179,7 +180,9 @@ int audio_play(void)
 	} 											  
 	myfree(SRAMIN,wavfileinfo.lfname);	
 	myfree(SRAMIN,pname);				
-	myfree(SRAMIN,wavindextbl);		
+	myfree(SRAMIN,wavindextbl);
+	music_on = 0;
+	is_web_music_player = 0;
 	return 0;	
 } 
 

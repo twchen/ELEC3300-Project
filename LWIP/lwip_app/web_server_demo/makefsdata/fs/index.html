@@ -33,17 +33,17 @@
 				</tr>
 				<tr>
 					<td>Lamp 1</td>
-					<td ng-click="refresh('lamp1')">{{lamp1}}</td>
+					<td ng-click="refresh('lamp1')" ng-style='styleDict.lamp1'>{{lamp1}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="switch('lamp1')">Toggle Lamp 1</button></td>
 				</tr>
 				<tr>
 					<td>Lamp 2</td>
-					<td ng-click="refresh('lamp2')">{{lamp2}}</td>
+					<td ng-click="refresh('lamp2')" ng-style='styleDict.lamp2'>{{lamp2}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="switch('lamp2')">Toggle Lamp 2</button></td>
 				</tr>
 				<tr>
 					<td>Alarm</td>
-					<td  ng-click="refresh('alarm')">{{alarm}}</td>
+					<td  ng-click="refresh('alarm')" ng-style='styleDict.alarm'>{{alarm}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="switch('alarm')">Trigger Alarm</button></td>
 				</tr>
 				<tr>

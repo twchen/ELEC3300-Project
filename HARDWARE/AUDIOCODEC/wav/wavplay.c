@@ -233,7 +233,7 @@ u8 wav_play_song(u8* fname)
 							res=key;
 							break; 
 						}
-						if(current_handler == music_handler && music_on == 0){
+						if(is_web_music_player == 1 && music_on == 0){
 							res=WKUP_PRES;
 							break;
 						}

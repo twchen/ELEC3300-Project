@@ -7,6 +7,8 @@
 #include "wavplay.h"
 #include "piclib.h"
 
+u8 music_on = 0;
+u8 is_web_music_player = 0;
 void (*current_handler)(u16, u16);
 
 int ends_with(const char *str, const char *suffix)
@@ -248,10 +250,14 @@ void entertainment_menu_handler(u16 x, u16 y)
 	}
 }
 
-extern u8 music_on;
-void music_handler(u16 x, u16 y)
+void music_handler(void)
 {
+	printf("hello\n");
 	if(music_on){
+		LCD_Clear(WHITE);
+		ai_load_picfile("0:/systems/music.jpg", 0, 0, 480, 800, 1);
 		audio_play();
+		draw_entertainment_menu();
+		set_handler(entertainment_menu_handler);
 	}
 }
